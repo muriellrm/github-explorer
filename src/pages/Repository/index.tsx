@@ -36,16 +36,16 @@ const Repository: React.FC = () => {
     const [repository, setRepository] = useState<Repository | null>(null);
     const [issues, setIssues] = useState<Issue[]>([]);
 
-    useEffect(() =>{
-        api.get(`repos/${params.repository}`).then((response) =>{
+    useEffect(() => {
+        api.get(`repos/${params.repository}`).then((response) => {
             setRepository(response.data);
         });
 
-        api.get(`repos/${params.repository}/issues`).then((response) =>{
-
+        api.get(`repos/${params.repository}/issues`).then((response) => {
+            setIssues(response.data);
         })
 
-    },[params.repository])
+    }, [params.repository])
 
     return (
         <>
@@ -57,42 +57,44 @@ const Repository: React.FC = () => {
                     Voltar
                 </Link>
             </Header>
-            
+
             { repository && (
                 <RepositoryInfo>
-                <header>
-                    <img src={repository.owner.avatar_url} alt={repository.owner.login} />
-                    <div>
-                        <strong>{repository.full_name}</strong>
-                        <p>{repository.description}</p>
-                    </div>
-                </header>
-                <ul>
-                    <li>
-                        <strong></strong>
-                        <span>Stars</span>
-                    </li>
-                    <li>
-                        <strong></strong>
-                        <span>Forks</span>
-                    </li>
-                    <li>
-                        <strong></strong>
-                        <span>Issues abertas</span>
-                    </li>
-                </ul>
+                    <header>
+                        <img src={repository.owner.avatar_url} alt={repository.owner.login} />
+                        <div>
+                            <strong>{repository.full_name}</strong>
+                            <p>{repository.description}</p>
+                        </div>
+                    </header>
+                    <ul>
+                        <li>
+                            <strong>{repository.stargazers_count}</strong>
+                            <span>Stars</span>
+                        </li>
+                        <li>
+                            <strong>{repository.forks_count}</strong>
+                            <span>Forks</span>
+                        </li>
+                        <li>
+                            <strong>{repository.open_issues_count}</strong>
+                            <span>Issues abertas</span>
+                        </li>
+                    </ul>
 
-            </RepositoryInfo>
+                </RepositoryInfo>
             )}
 
             <Issues>
-                <Link to="">
-                    <div>
-                        <strong>das</strong>
-                        <p>sad</p>
-                    </div>
-                    <FiChevronRight size={20} />
-                </Link>
+                {issues.map(issue => (
+                    <Link to="">
+                        <div>
+                            <strong>{issue.title}</strong>
+                            <p>{issue.user.login}</p>
+                        </div>
+                        <FiChevronRight size={20} />
+                    </Link>
+                ))}
             </Issues>
         </>
     );
